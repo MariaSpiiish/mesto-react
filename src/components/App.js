@@ -6,15 +6,15 @@ import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 
 function App() {
-  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
-  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
-  const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
 
   const closeAllPopups = () => {
-    setEditAvatarPopupOpen(false);
-    setEditProfilePopupOpen(false);
-    setAddPlacePopupOpen(false);
+    setIsEditAvatarPopupOpen(false);
+    setIsEditProfilePopupOpen(false);
+    setIsAddPlacePopupOpen(false);
     setSelectedCard({});
   }
 
@@ -22,11 +22,11 @@ function App() {
     <div className="page-container">
       <div className="page">
         <Header />
-        <Main onEditAvatar={setEditAvatarPopupOpen} onEditProfile={setEditProfilePopupOpen} onAddPlace={setAddPlacePopupOpen} onCardClick={setSelectedCard}/>
+        <Main onEditAvatar={setIsEditAvatarPopupOpen} onEditProfile={setIsEditProfilePopupOpen} onAddPlace={setIsAddPlacePopupOpen} onCardClick={setSelectedCard}/>
         
         <Footer />
 
-        <PopupWithForm title={'Обновить аватар'} name={'avatar'} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups}>
+        <PopupWithForm title={'Обновить аватар'} name={'avatar'} buttonText={'Сохранить'} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups}>
           <input 
               name="avatar"
               id="avatar-link-input" 
@@ -38,7 +38,7 @@ function App() {
           <span id="avatar-link-error" className="avatar-link-input-error popup__error"></span>
         </PopupWithForm>
 
-        <PopupWithForm title={'Редактировать профиль'} name={'profile-edit'} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}> 
+        <PopupWithForm title={'Редактировать профиль'} name={'profile-edit'} buttonText={'Сохранить'} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}> 
           <input 
             name="name"
             id="name-input"
@@ -63,7 +63,7 @@ function App() {
           <span id="job-error" className="job-input-error popup__error"></span>
         </PopupWithForm>
 
-        <PopupWithForm title={'Новое место'} name={'place-edit'} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups}> 
+        <PopupWithForm title={'Новое место'} name={'place-edit'} buttonText={'Создать'} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups}> 
           <input 
             name="name"
             id="title-input"
