@@ -3,24 +3,27 @@ import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
+import ImagePopup from './ImagePopup';
 
 function App() {
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState({});
 
   const closeAllPopups = () => {
     setEditAvatarPopupOpen(false);
     setEditProfilePopupOpen(false);
     setAddPlacePopupOpen(false);
-    
+    setSelectedCard({});
   }
 
   return (
     <div className="page-container">
       <div className="page">
         <Header />
-        <Main onEditAvatar={setEditAvatarPopupOpen} onEditProfile={setEditProfilePopupOpen} onAddPlace={setAddPlacePopupOpen} />
+        <Main onEditAvatar={setEditAvatarPopupOpen} onEditProfile={setEditProfilePopupOpen} onAddPlace={setAddPlacePopupOpen} onCardClick={setSelectedCard}/>
+        
         <Footer />
 
         <PopupWithForm title={'Обновить аватар'} name={'avatar'} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups}>
@@ -83,13 +86,9 @@ function App() {
           <span id="pic-link-error" className="pic-link-input-error popup__error"></span>
         </PopupWithForm>
 
-        {/* <div className="popup popup_type_image">
-          <div className="popup__image-container">
-            <button type="button" className="popup__close-button popup__close-button_type_image"></button>
-            <img src="#" alt="Изображение" className="popup__image"/>
-            <h2 className="popup__caption"></h2>
-          </div>
-        </div> 
+        <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
+
+        {/* 
 
         <div className="popup popup_type_trash">
           <div className="popup__trash-container">
