@@ -62,20 +62,20 @@ class Api {
     .then(this._handleResponse)
   }
 
-  putLike(data, id) {
+  putLike(id) {
     return fetch(`${this.url}/cards/${id}/likes`, {
       method: 'PUT',
       headers: this.headers,
-      body: JSON.stringify(data)
+      
     })
     .then(this._handleResponse)
   }
 
-  deleteLike(data, id) {
+  deleteLike(id) {
     return fetch(`${this.url}/cards/${id}/likes`, {
       method: 'DELETE',
       headers: this.headers,
-      body: JSON.stringify(data)
+      
     })
     .then(this._handleResponse)
   }
