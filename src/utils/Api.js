@@ -28,7 +28,6 @@ class Api {
   }
 
   patchUserAvatar(avatar) {
-    
     return fetch(`${this.url}/users/me/avatar`, {
       method: 'PATCH',
       headers: this.headers,

@@ -3,12 +3,13 @@ import { api } from '../utils/Api';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import PopupWithForm from './PopupWithForm';
+// import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { CardsContext } from '../contexts/CardsContext';
+import AddPlacePopup from './AddPlacePopup';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
@@ -34,7 +35,6 @@ function App() {
       .then((cardsData) => {
         
         setCards(cardsData.map((item) => ({
-            
             _id: item._id,
             link: item.link,
             name: item.name,
@@ -56,7 +56,6 @@ function App() {
 
   const handleUpdateUser = (currentUser) => {
     api.patchUserInfo(currentUser)
-      
       .then((userInfo) => {
         setCurrentUser(userInfo);
       })
@@ -75,41 +74,72 @@ function App() {
       });
   }
 
+  const handleAddPlace = (card) => {
+    api.postNewCard(card)
+      .then((newCard) => {
+        setCards([newCard, ...cards]); 
+      })
+      .catch((err) => {
+        console.log(`Ошибка в обновлении новой карточки: ${err}`);
+      });
+  }
+
+  function handleCardLike(card) {
+    // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    
+    if(!isLiked) {
+      api.putLike(card._id)
+        .then((newCard) => {
+          setCards(stateCards => {
+            return stateCards.map((c) => (
+              c._id === card._id ? newCard : c
+            ))
+          })
+        })
+        .catch((err) => {
+          console.log(`Ошибка в постановке лайка: ${err}`);
+        });
+    } else {
+      api.deleteLike(card._id)
+        .then((newCard) => {
+          setCards(stateCards => {
+            return stateCards.map((c) => (
+              c._id === card._id ? newCard : c
+            ))
+          })
+        })
+        .catch((err) => {
+          console.log(`Ошибка в снятии лайка: ${err}`);
+        });
+    }
+  }
+
+  function handleCardDelete(card) {
+    api.deleteCard(card, card._id)
+      .then(() => {
+        setCards(cards.filter((c) => {
+          return c._id !== card._id
+        }))
+      })
+      .catch((err) => {
+        console.log(`Ошибка в удалении карточки: ${err}`);
+      });
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <CardsContext.Provider value={cards}>
         <div className="page-container">
           <div className="page">
             <Header />
-            <Main onEditAvatar={setIsEditAvatarPopupOpen} onEditProfile={setIsEditProfilePopupOpen} onAddPlace={setIsAddPlacePopupOpen} onCardClick={setSelectedCard} onCardLike={setCards} onCardDelete={setCards}/>
+            <Main onEditAvatar={setIsEditAvatarPopupOpen} onEditProfile={setIsEditProfilePopupOpen} onAddPlace={setIsAddPlacePopupOpen} onCardClick={setSelectedCard} onCardLike={handleCardLike} onCardDelete={handleCardDelete} cards={cards}/>
             
             <Footer />
 
             <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
             <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}/> 
-
-            <PopupWithForm title={'Новое место'} name={'place-edit'} buttonText={'Создать'} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups}> 
-              <input 
-                name="name"
-                id="title-input"
-                type="text"
-                minLength="2"
-                maxLength="30" 
-                required
-                placeholder="Название" 
-                className="popup__input popup__input_type_place-title"
-              />
-              <span id="title-error" className="title-input-error popup__error"></span>
-              <input 
-                  name="link"
-                  id="pic-link-input" 
-                  type="url" 
-                  required
-                  placeholder="Ссылка на картинку" 
-                  className="popup__input popup__input_type_pic-link"
-              />
-              <span id="pic-link-error" className="pic-link-input-error popup__error"></span>
-            </PopupWithForm>
+            <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlace} />
 
             <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
 
