@@ -19,7 +19,6 @@ function App() {
   const [currentUser, setCurrentUser] = useState({name: '', about: '', avatar: ''});
   const [cards, setCards] = useState([]);
 
-
   useEffect(() => {
     api.getUserInfo()
       .then((userData) => {
@@ -32,16 +31,7 @@ function App() {
 
   useEffect(() => {
     api.getCards()
-      .then((cardsData) => {
-        
-        setCards(cardsData.map((item) => ({
-            _id: item._id,
-            link: item.link,
-            name: item.name,
-            likes: item.likes,
-            owner: item.owner
-          })));
-      })
+      .then(setCards)
       .catch((err) => {
         console.log(`Ошибка в загрузке данных карточек: ${err}`);
       });
@@ -85,34 +75,19 @@ function App() {
   }
 
   function handleCardLike(card) {
-    // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = card.likes.some(i => i._id === currentUser._id);
     
-    if(!isLiked) {
-      api.putLike(card._id)
-        .then((newCard) => {
-          setCards(stateCards => {
-            return stateCards.map((c) => (
-              c._id === card._id ? newCard : c
-            ))
-          })
+    api.setCardLike(card._id, (!isLiked ? 'PUT' : 'DELETE'))
+      .then((newCard) => {
+        setCards(stateCards => {
+          return stateCards.map((c) => (
+            c._id === card._id ? newCard : c
+          ))
         })
-        .catch((err) => {
-          console.log(`Ошибка в постановке лайка: ${err}`);
-        });
-    } else {
-      api.deleteLike(card._id)
-        .then((newCard) => {
-          setCards(stateCards => {
-            return stateCards.map((c) => (
-              c._id === card._id ? newCard : c
-            ))
-          })
-        })
-        .catch((err) => {
-          console.log(`Ошибка в снятии лайка: ${err}`);
-        });
-    }
+      })
+      .catch((err) => {
+        console.log(`Ошибка в постановке лайка: ${err}`);
+      });
   }
 
   function handleCardDelete(card) {

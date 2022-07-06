@@ -4,10 +4,6 @@ import PopupWithForm from "./PopupWithForm";
 function AddPlacePopup(props) {
     const [name, setName] = useState('');
     const [link, setLink] = useState('');
-    
-   
-
-
 
     function handleSubmit(e) {
         e.preventDefault();

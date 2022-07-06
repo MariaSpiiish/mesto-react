@@ -61,24 +61,33 @@ class Api {
     .then(this._handleResponse)
   }
 
-  putLike(id) {
+  setCardLike(id, method) {
     return fetch(`${this.url}/cards/${id}/likes`, {
-      method: 'PUT',
+      method: method,
       headers: this.headers,
-      
-    })
-    .then(this._handleResponse)
-  }
-
-  deleteLike(id) {
-    return fetch(`${this.url}/cards/${id}/likes`, {
-      method: 'DELETE',
-      headers: this.headers,
-      
     })
     .then(this._handleResponse)
   }
 }
+
+  // putLike(id) {
+  //   return fetch(`${this.url}/cards/${id}/likes`, {
+  //     method: 'PUT',
+  //     headers: this.headers,
+      
+  //   })
+  //   .then(this._handleResponse)
+  // }
+
+  // deleteLike(id) {
+  //   return fetch(`${this.url}/cards/${id}/likes`, {
+  //     method: 'DELETE',
+  //     headers: this.headers,
+      
+  //   })
+  //   .then(this._handleResponse)
+  // }
+
 
 export const api = new Api({
   url: 'https://mesto.nomoreparties.co/v1/cohort-42',
