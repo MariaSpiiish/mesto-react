@@ -1,17 +1,14 @@
-import { CardsContext } from "../contexts/CardsContext";
-import { useContext, useState, useEffect } from "react";
+import { useState } from "react";
 import PopupWithForm from "./PopupWithForm";
 
 function AddPlacePopup(props) {
-    const card = useContext(CardsContext);
     const [name, setName] = useState('');
     const [link, setLink] = useState('');
-
-    useEffect(() => {
-        setName(card.name);
-        setLink(card.link);
-    }, [card]); 
     
+   
+
+
+
     function handleSubmit(e) {
         e.preventDefault();
 
@@ -21,6 +18,8 @@ function AddPlacePopup(props) {
         })
 
         props.onClose();
+        setName('');
+        setLink('');
     }
 
     return (
@@ -34,6 +33,7 @@ function AddPlacePopup(props) {
                 required
                 placeholder="Название" 
                 className="popup__input popup__input_type_place-title"
+                value={name}
                 onChange={(e) => {
                     return setName(e.target.value);
                 }}
@@ -46,6 +46,7 @@ function AddPlacePopup(props) {
                 required
                 placeholder="Ссылка на картинку" 
                 className="popup__input popup__input_type_pic-link"
+                value={link}
                 onChange={(e) => {
                 return setLink(e.target.value);
                 }}
